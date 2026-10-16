@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.devwatch"
+          path="/org/gnome/shell/extensions/devwatch/">
+
+    <!-- ── Polling ─────────────────────────────────────────────────────── -->
+    <key name="poll-interval" type="i">
+      <default>10</default>
+      <summary>Background poll interval (seconds)</summary>
+      <description>
+        How often DevWatch rescans /proc and running ports in the background.
+        Lower values give fresher data at the cost of slightly more CPU usage.
+        Valid range: 5–60 seconds.
+      </description>
+      <range min="5" max="60"/>
+    </key>
+
+      <!-- ── Panel placement ─────────────────────────────────────────────── -->
+      <key name="panel-position" type="s">
+        <default>'right'</default>
+        <summary>Panel box placement</summary>
+        <description>
+          Choose where DevWatch appears in the GNOME top bar.
+          Allowed values: left, center, right.
+        </description>
+      </key>
+
+      <key name="panel-index" type="i">
+        <default>0</default>
+        <summary>Panel order index</summary>
+        <description>
+          Position index inside the selected panel box.
+          Lower numbers place DevWatch closer to the start of that box.
+        </description>
+        <range min="0" max="30"/>
+      </key>
+
+    <!-- ── Port monitoring ────────────────────────────────────────────── -->
+    <key name="show-system-ports" type="b">
+      <default>false</default>
+      <summary>Show system (non-dev) ports in panel</summary>
+      <description>
+        When enabled, all listening ports are shown — not just the built-in
+        dev-port set (3000, 5173, 8080, …). This is off by default to keep
+        the panel compact.
+      </description>
+    </key>
+
+    <key name="notify-port-conflicts" type="b">
+      <default>true</default>
+      <summary>Fire GNOME notifications on newly occupied dev ports</summary>
+      <description>
+        When a dev port (e.g. 3000, 5173) is first occupied by a new
+        process, DevWatch fires a GNOME desktop notification. Disable if
+        you find these notifications noisy.
+      </description>
+    </key>
+
+
+    <!-- ── Build performance ──────────────────────────────────────────── -->
+    <key name="max-build-history" type="i">
+      <default>8</default>
+      <summary>Maximum build history rows shown in panel</summary>
+      <description>
+        How many completed build runs appear in the Build Performance section
+        of the panel dropdown. Valid range: 1–20.
+      </description>
+      <range min="1" max="20"/>
+    </key>
+
+    <!-- ── Keyboard shortcut ─────────────────────────────────────────── -->
+    <key name="open-devwatch" type="as">
+      <default>['&lt;Super&gt;d']</default>
+      <summary>Keyboard shortcut to open DevWatch panel</summary>
+      <description>
+        Key binding to toggle the DevWatch panel dropdown open/closed.
+        Default is Super+D. Set to an empty array to disable.
+      </description>
+    </key>
+
+  </schema>
+</schemalist>

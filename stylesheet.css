@@ -1,0 +1,921 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+ * DevWatch — stylesheet.css   (v8 — project separation, open state, row clarity)
+ * ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Panel menu width ──────────────────────────────────────────────────────── */
+.devwatch-menu {
+    min-width: 420px;
+    color: #e9ecf1;
+    background-color: rgba(20, 22, 28, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* Force dark popup surface even when GNOME is using a light shell theme. */
+.devwatch-menu .popup-menu-content,
+.devwatch-menu .popup-menu,
+.devwatch-menu .popup-sub-menu {
+    background-color: rgba(20, 22, 28, 0.98);
+    color: #e9ecf1;
+}
+
+/* Keep base rows transparent/dark and text consistent inside this menu. */
+.devwatch-menu .popup-menu-item,
+.devwatch-menu .popup-sub-menu-item,
+.devwatch-menu .popup-submenu-menu-item {
+    background-color: transparent;
+    color: #e9ecf1;
+}
+
+.devwatch-menu .popup-separator-menu-item .popup-separator-menu-item-separator {
+    background-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Prevent GNOME shell/theme hover rules from switching our menu to a
+ * light surface. Keep hover states subtle and dark to match the menu. */
+.devwatch-menu .popup-menu-item:hover,
+.devwatch-menu .popup-sub-menu .popup-menu-item:hover,
+.devwatch-menu .popup-sub-menu-item:hover {
+    background-color: rgba(255,255,255,0.02) !important;
+    color: inherit !important;
+}
+
+/* Light themes can style selected/focused/open rows with bright fills.
+ * Force these states to remain dark and non-sticky. */
+.devwatch-menu .popup-menu-item:active,
+.devwatch-menu .popup-menu-item:focus,
+.devwatch-menu .popup-menu-item:selected,
+.devwatch-menu .popup-menu-item:checked,
+.devwatch-menu .popup-sub-menu-item:active,
+.devwatch-menu .popup-sub-menu-item:focus,
+.devwatch-menu .popup-sub-menu-item:selected,
+.devwatch-menu .popup-sub-menu-item:checked,
+.devwatch-menu .popup-submenu-menu-item:active,
+.devwatch-menu .popup-submenu-menu-item:focus,
+.devwatch-menu .popup-submenu-menu-item:selected,
+.devwatch-menu .popup-submenu-menu-item:checked,
+.devwatch-menu .popup-menu-item.selected,
+.devwatch-menu .popup-sub-menu-item.selected,
+.devwatch-menu .popup-submenu-menu-item.selected {
+    background-color: rgba(255,255,255,0.03) !important;
+    color: #e9ecf1 !important;
+}
+
+/* The scroll policy on the internal St.ScrollView is changed to AUTOMATIC
+ * in extension.js (open-state-changed). No CSS max-height is needed here
+ * because GNOME Shell's layout manager already constrains the popup's outer
+ * boxPointer to the available screen height. The policy change alone causes
+ * the menu to scroll rather than compress when content exceeds that height. */
+
+/* Remove grey expansion card background — scoped to our menu only          */
+.devwatch-menu .popup-sub-menu {
+    background-color: transparent;
+    box-shadow: none;
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    /* max-height: none — sub-menus expand to natural height; the parent
+     * scroll view (policy=AUTOMATIC) handles overall menu overflow. */
+    max-height: none;
+}
+
+/* Visual margin between project blocks (collapsed and expanded)           */
+.devwatch-menu .popup-sub-menu-item {
+    margin-bottom: 6px;
+}
+
+/* Subtle background on expanded project header (replaces harsh grey)      */
+.devwatch-menu .popup-sub-menu-item:open,
+.devwatch-menu .popup-submenu-menu-item:open {
+    background-color: rgba(255,255,255,0.04);
+    border-radius: 6px;
+}
+
+/* Consistent row padding for all items inside our menu */
+.devwatch-menu .popup-menu-item {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+/* Compact padding for service rows nested inside an expanded project      */
+.devwatch-menu .popup-sub-menu .popup-menu-item {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    min-height: 24px;
+}
+
+/* Actions row: top margin provides separation without a hard divider line  */
+.devwatch-menu .popup-sub-menu .dw-project-actions {
+    padding-top: 4px;
+    margin-top: 1px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Extra bottom breathing room when the empty-state label sits above divider */
+.devwatch-menu .popup-sub-menu .dw-empty-services {
+    padding-bottom: 6px;
+}
+
+/* ── Panel bar ─────────────────────────────────────────────────────────────── */
+.devwatch-panel-box   { spacing: 4px; }
+.devwatch-panel-label { font-size: 12px; }
+
+.devwatch-dot         { font-size: 9px; padding-right: 3px; }
+.devwatch-dot-green   { color: #57e389; }
+.devwatch-dot-yellow  { color: #f8e45c; }
+.devwatch-dot-red     { color: #ed333b; }
+.devwatch-dot-amber-pulse {
+    color: #e8a040;
+    animation: dw-dot-pulse 1200ms ease-in-out infinite;
+}
+
+@keyframes dw-dot-pulse {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.45; }
+    100% { opacity: 1; }
+}
+
+/* ── Health summary (top bar) ──────────────────────────────────────────────── */
+.dw-summary-box {
+    padding: 8px 16px 8px 16px;
+    spacing: 0;
+}
+.dw-summary-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+.dw-summary-stats {
+    font-size: 12px;
+    color: #aaaaaa;
+    margin-bottom: 12px;
+}
+.dw-summary-alert {
+    font-size: 11px;
+    color: #f8e45c;
+    font-weight: bold;
+    padding-top: 2px;
+}
+.dw-settings-btn {
+    padding: 6px;
+    border-radius: 50%;
+    transition-duration: 200ms;
+}
+.dw-settings-btn .dw-settings-icon {
+    icon-size: 14px;
+    color: #888888;
+}
+.dw-settings-btn:hover {
+    background-color: rgba(255,255,255,0.03);
+}
+.dw-settings-btn:hover .dw-settings-icon {
+    color: #dddddd;
+}
+
+
+/* ── Summary quick-action buttons ─────────────────────────────────────────── */
+.dw-summary-action-btn {
+    font-size: 11px;
+    color: #78aeed;
+    padding: 6px 14px;
+    border-radius: 6px;
+    background-color: rgba(120,174,237,0.10);
+}
+.dw-summary-action-btn:hover {
+    color: #b0d0f7;
+    background-color: rgba(120,174,237,0.18);
+}
+.dw-summary-action-danger {
+    color: #f8e45c;
+    background-color: rgba(248,228,92,0.08);
+}
+.dw-summary-action-danger:hover {
+    color: #ed333b;
+    background-color: rgba(237,51,59,0.14);
+}
+
+/* ── Section headers ───────────────────────────────────────────────────────── */
+.dw-section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #cccccc;
+    padding-top: 6px;
+    padding-bottom: 2px;
+    /* x-expand is intentionally NOT set here — the expanding spacer in the
+     * headerRow JS layout is responsible for pushing the Save button right.
+     * Setting x-expand on the label steals all space from the spacer. */
+    y-align: center;
+}
+/* Alert section header — slightly warmer than normal section labels */
+.dw-alert-section-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #f2d47a;
+    letter-spacing: 0.2px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    x-expand: true;
+    y-align: center;
+}
+/* Right-anchored secondary action — sits between section title and ▼ arrow */
+.dw-section-action {
+    font-size: 11px;
+    font-weight: normal;
+    color: rgba(232, 160, 64, 0.65);
+    padding: 2px 8px;
+    border-radius: 5px;
+}
+.dw-section-action:hover {
+    color: #e8a040;
+    background-color: rgba(232, 160, 64, 0.1);
+}
+.dw-section-action-danger {
+    font-size: 11px;
+    color: #f8e45c;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+.dw-section-action-danger:hover {
+    color: #ed333b;
+    background-color: rgba(237,51,59,0.15);
+}
+
+/* ── Focus timeline ─────────────────────────────────────────────────────── */
+.dw-focus-bar {
+    min-height: 10px;
+    padding: 2px 0 6px 0;
+}
+
+.dw-focus-block {
+    min-width: 4px;
+    min-height: 10px;
+}
+
+.dw-focus-dot {
+    font-size: 11px;
+}
+
+.dw-focus-project {
+    min-width: 90px;
+    font-size: 11px;
+    color: #d8d8d8;
+}
+
+.dw-focus-bartext {
+    font-size: 10px;
+    color: #8c8c8c;
+}
+
+.dw-focus-duration {
+    font-size: 11px;
+    color: #d0d0d0;
+}
+
+.dw-focus-relative {
+    font-size: 10px;
+    color: #8b8b8b;
+}
+
+.dw-focus-score {
+    font-size: 11px;
+    color: #b8c7d8;
+    padding-top: 4px;
+}
+
+/* ── Typography ────────────────────────────────────────────────────────────── */
+.dw-project-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #eeeeee;
+    x-expand: true;
+    y-align: center;
+    min-height: 24px;
+}
+.dw-project-stats {
+    font-size: 11px;
+    color: #909090;
+    y-align: center;
+    padding-left: 14px;
+    padding-bottom: 4px;
+}
+.dw-project-dot {
+    font-size: 10px;
+    padding-right: 8px;
+    y-align: center;
+}
+.dw-project-dot-green  { color: #57e389; }
+.dw-project-dot-yellow { color: #f8e45c; }
+.dw-project-dot-red    { color: #ed333b; }
+
+.dw-service-name {
+    font-size: 12px;
+    color: #cccccc;
+    x-expand: true;
+    y-align: center;
+    min-height: 28px;
+}
+/* Combined service label: "Python Server · Port 8000" */
+.dw-service-row {
+    font-size: 12px;
+    color: #cccccc;
+    x-expand: true;
+    y-align: center;
+    min-height: 28px;
+}
+.dw-service-port {
+    font-size: 11px;
+    color: #78aeed;
+    y-align: center;
+    padding-right: 4px;
+    min-height: 28px;
+}
+.dw-service-uptime {
+    font-size: 10px;
+    color: #888888;
+    y-align: center;
+    width: 38px;
+}
+.dw-dim {
+    font-size: 11px;
+    color: #787878;
+    font-style: italic;
+}
+.dw-muted {
+    font-size: 10px;
+    color: #888888;
+}
+.dw-alert-label {
+    font-size: 11px;
+    color: #f8e45c;
+    font-style: italic;
+    y-align: center;
+}
+
+/* ── Port section ──────────────────────────────────────────────────────────── */
+
+/* Compact rows + subtle hairline separator between entries                 */
+.devwatch-menu .dw-port-row {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.dw-port-project {
+    font-size: 13px;
+    font-weight: 600;
+    color: #dddddd;
+    y-align: center;
+    min-height: 20px;
+}
+.dw-port-number {
+    font-size: 13px;
+    font-weight: bold;
+    color: #78aeed;
+    width: 52px;
+    y-align: center;
+}
+.dw-port-number-dim {
+    font-size: 13px;
+    color: #484848;
+    width: 52px;
+    y-align: center;
+}
+.dw-port-dot        { font-size: 9px; y-align: center; padding-right: 8px; }
+.dw-port-dot-active { color: #57e389; }
+.dw-port-dot-dim    { color: #3a3a3a; }
+.dw-port-process {
+    font-size: 11px;
+    color: #aaaaaa;
+    x-expand: true;
+    y-align: center;
+}
+.dw-port-detail {
+    font-size: 11px;
+    color: #8a8a8a;
+    x-expand: true;
+    y-align: center;
+    padding-left: 15px;
+}
+
+/* ── Action buttons ────────────────────────────────────────────────────────── */
+.dw-btn-kill {
+    font-size: 11px;
+    font-weight: bold;
+    color: #ed333b;
+    padding: 4px 12px;
+    border-radius: 6px;
+    background-color: rgba(237,51,59,0.10);
+}
+.dw-btn-kill:hover {
+    background-color: rgba(237,51,59,0.25);
+    color: #ff6b6b;
+}
+.dw-btn-stop {
+    font-size: 11px;
+    color: #888888;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+.dw-btn-stop:hover {
+    color: #ed333b;
+    background-color: rgba(237,51,59,0.14);
+}
+.dw-btn-load {
+    font-size: 11px;
+    color: #888888;
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+.dw-btn-load:hover {
+    color: #78aeed;
+    background-color: rgba(120,174,237,0.14);
+}
+.dw-btn-delete {
+    font-size: 11px;
+    color: #484848;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+.dw-btn-delete:hover {
+    color: #ed333b;
+    background-color: rgba(237,51,59,0.12);
+}
+/* Resume pill — primary action in session rows */
+.dw-btn-resume {
+    font-size: 11px;
+    font-weight: 500;
+    color: #78aeed;
+    padding: 3px 10px;
+    border-radius: 5px;
+    background-color: rgba(120,174,237,0.11);
+}
+.dw-btn-resume:hover {
+    color: #c0d8f8;
+    background-color: rgba(120,174,237,0.22);
+}
+/* × dismiss — ghost button, reveals red on hover */
+.dw-btn-snap-delete {
+    font-size: 13px;
+    color: #525252;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+.dw-btn-snap-delete:hover {
+    color: #ed333b;
+    background-color: rgba(237,51,59,0.12);
+}
+
+/* ── Cleanup / Issues ──────────────────────────────────────────────────────── */
+.dw-issue-ok {
+    font-size: 11px;
+    color: #57e389;
+    font-style: italic;
+}
+.dw-issue-name {
+    font-size: 12px;
+    color: #cccccc;
+    x-expand: true;
+    y-align: center;
+}
+.dw-issue-reason {
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 20px;
+    y-align: center;
+}
+.dw-issue-reason-idle    { color: #888888; background-color: rgba(255,255,255,0.06); }
+.dw-issue-reason-stray   { color: #f8e45c; background-color: rgba(248,228,92,0.10); }
+.dw-issue-reason-frozen  { color: #ed333b; background-color: rgba(237,51,59,0.10); }
+
+/* ── Snapshots ─────────────────────────────────────────────────────────────── */
+
+/* Override the 1px sub-menu padding for session-specific row classes       */
+.devwatch-menu .popup-sub-menu .dw-snap-item {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+.devwatch-menu .popup-sub-menu .dw-last-workspace {
+    padding-top: 7px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 3px;
+    background-color: rgba(120,174,237,0.04);
+    border-radius: 5px;
+}
+.devwatch-menu .popup-sub-menu .dw-snap-naming-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.dw-snap-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #dddddd;
+    x-expand: true;
+    y-align: center;
+}
+/* Date — compact, no fixed width */
+.dw-snap-date {
+    font-size: 10px;
+    color: #666666;
+    y-align: center;
+    padding-left: 4px;
+    padding-right: 2px;
+}
+/* Keep for older snapshots loaded before the rename */
+.dw-snap-meta {
+    font-size: 10px;
+    color: #666666;
+    y-align: center;
+}
+
+/* Last Workspace sticky header */
+.dw-last-workspace-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #78aeed;
+    y-align: center;
+}
+
+/* Inline session name entry — shown when Save is clicked                   */
+.dw-snap-entry {
+    font-size: 12px;
+    color: #eeeeee;
+    background-color: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 6px;
+    padding: 4px 8px;
+    caret-color: #78aeed;
+}
+.dw-snap-entry:focus {
+    border-color: rgba(120,174,237,0.50);
+    background-color: rgba(255,255,255,0.09);
+}
+.dw-snap-naming-row {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* ── Build section ─────────────────────────────────────────────────────────── */
+.dw-build-active-card {
+    background-color: rgba(120, 174, 237, 0.12);
+    border: 1px solid rgba(120, 174, 237, 0.30);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+.dw-build-active-row { y-align: center; }
+.dw-build-active-icon { color: #8cc0ff; icon-size: 14px; margin-right: 10px; }
+.dw-build-active-text { }
+.dw-build-status      { font-size: 13px; font-weight: 600; color: #ffffff; }
+.dw-build-meta        { font-size: 11px; color: rgba(235, 235, 235, 0.70); }
+.dw-build-meta-row    { }
+.dw-build-meta-time   { color: rgba(255, 255, 255, 0.95); font-weight: 600; margin-right: 10px; }
+.dw-build-meta-label  { color: rgba(220, 220, 220, 0.75); margin-right: 4px; }
+.dw-build-meta-cpu    { color: rgba(182, 220, 255, 0.95); font-weight: bold; }
+.dw-build-meta-sep    { color: rgba(240, 240, 240, 0.40); font-size: 12px; margin-right: 4px; }
+.dw-build-empty       { font-size: 11px; color: rgba(240, 240, 240, 0.58); padding: 2px 0; }
+
+/* History sub-menu item tweaks */
+.devwatch-menu .popup-sub-menu .dw-build-hist-row {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+.dw-build-ok-icon     { color: #57e389; icon-size: 11px; margin-right: 7px; }
+.dw-build-fail-icon   { color: #ed333b; icon-size: 11px; margin-right: 7px; }
+.dw-build-proj-name   { font-size: 12px; font-weight: 500; color: rgba(235, 235, 235, 0.88); x-expand: true; y-align: center; }
+
+.dw-build-stats-row   { spacing: 6px; y-align: center; }
+
+.dw-build-stat-pill {
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 1px 7px;
+    font-size: 9px;
+    color: rgba(228, 228, 228, 0.78);
+    y-align: center;
+    font-family: monospace;
+}
+
+.dw-build-hist-hdr    { font-size: 11px; color: #dddddd; font-weight: 600; padding-top: 8px;
+    padding-bottom: 4px; }
+
+/* ── Process sub-rows ──────────────────────────────────────────────────────── */
+.dw-proc-name   { font-size: 11px; color: #b0b0b0; x-expand: true; y-align: center; }
+.dw-proc-state  { font-size: 10px; width: 30px; y-align: center; }
+.dw-proc-green  { color: #57e389; }
+.dw-proc-dim    { color: #555555; }
+.dw-proc-warn   { color: #f8e45c; }
+.dw-proc-red    { color: #ed333b; }
+.dw-open-term   { font-size: 11px; color: #78aeed; padding: 1px 6px; }
+.dw-open-term:hover { color: #aaccf4; }
+
+/* ── Alert rows ────────────────────────────────────────────────────────────── */
+.dw-alert-row-high {
+    font-size: 11px;
+    color: #f5dda0;
+    font-weight: 500;
+    line-height: 1.25;
+    y-align: center;
+}
+.dw-alert-row-warn {
+    font-size: 11px;
+    color: #efd89b;
+    font-weight: 500;
+    line-height: 1.25;
+    y-align: center;
+}
+
+.devwatch-menu .dw-alert-row-item {
+    padding: 5px 10px;
+    margin: 1px 12px;
+    border-radius: 8px;
+    background-color: rgba(242, 212, 122, 0.07);
+    border: 1px solid rgba(242, 212, 122, 0.16);
+}
+
+.dw-alert-icon-high,
+.dw-alert-icon-warn {
+    width: 9px;
+    padding-right: 3px;
+    y-align: center;
+}
+
+.dw-alert-icon-high {
+    color: #f8e45c;
+}
+
+.dw-alert-icon-warn {
+    color: rgba(248, 228, 92, 0.75);
+}
+
+/* ── Session Cards — warm amber theme ──────────────────────────────────────── */
+
+/* Shared card layout */
+.devwatch-menu .popup-sub-menu .dw-session-card,
+.devwatch-menu .popup-sub-menu .dw-session-card-primary {
+    padding: 10px 14px 13px 14px;
+    margin-top: 0;
+    margin-bottom: 6px;
+    margin-right: 12px;
+    margin-left: 12px;
+    border-radius: 10px;
+    min-height: 62px;
+}
+
+/* Regular session — subtle surface */
+.devwatch-menu .popup-sub-menu .dw-session-card {
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Last Workspace — warm amber glow */
+.devwatch-menu .popup-sub-menu .dw-session-card-primary {
+    background-color: rgba(232, 160, 64, 0.09);
+    border: 1px solid rgba(232, 160, 64, 0.25);
+}
+
+/* Naming row spacing */
+.devwatch-menu .popup-sub-menu .dw-session-naming-row {
+    padding: 2px 10px 6px 10px;
+}
+
+/* Typography */
+.dw-session-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #f0f0f0;
+}
+.dw-session-title-primary {
+    font-size: 13px;
+    font-weight: bold;
+    color: #e8a040;
+}
+.dw-session-subtitle {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 3px;
+}
+.dw-session-icon-primary {
+    color: #e8a040;
+}
+
+/* Session name entry */
+.dw-session-entry {
+    font-size: 12px;
+    color: #eeeeee;
+    background-color: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    padding: 4px 10px;
+    caret-color: #e8a040;
+}
+.dw-session-entry:focus {
+    border-color: rgba(232,160,64,0.55);
+    background-color: rgba(0,0,0,0.25);
+}
+
+/* Search entry inside Running Projects - force dark background and readable placeholder */
+.devwatch-menu .dw-search-entry {
+    background-color: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    color: #e9ecf1 !important;
+}
+.devwatch-menu .dw-search-entry:focus {
+    background-color: rgba(255,255,255,0.04) !important;
+    border-color: rgba(120,174,237,0.28) !important;
+}
+
+/* Ensure placeholder / hint text is visible in dark mode even when shell tries
+ * to apply light-theme placeholder colors. Use both generic entry selectors
+ * and specific DevWatch entry classes. */
+.devwatch-menu entry::placeholder,
+.devwatch-menu .entry::placeholder,
+.devwatch-menu .st-entry::placeholder,
+.devwatch-menu .dw-search-entry::placeholder,
+.devwatch-menu .dw-session-entry::placeholder,
+.devwatch-menu .dw-snap-entry::placeholder {
+    color: rgba(233,236,241,0.58) !important;
+}
+
+/* GNOME Shell entries often render hint text as a StLabel.hint-text child
+ * instead of placeholder pseudo-elements, so style both forms. */
+.devwatch-menu .dw-search-entry StLabel.hint-text,
+.devwatch-menu .dw-snap-entry StLabel.hint-text,
+.devwatch-menu .dw-session-entry StLabel.hint-text,
+.devwatch-menu .dw-search-entry .hint-text,
+.devwatch-menu .dw-snap-entry .hint-text,
+.devwatch-menu .dw-session-entry .hint-text {
+    color: rgba(233,236,241,0.82) !important;
+}
+
+/* Also force the text color for entries to stay bright for readability */
+.devwatch-menu entry,
+.devwatch-menu .entry,
+.devwatch-menu .st-entry,
+.devwatch-menu .dw-search-entry,
+.devwatch-menu .dw-session-entry,
+.devwatch-menu .dw-snap-entry {
+    color: #e9ecf1 !important;
+}
+
+/* Resume — warm amber CTA */
+.dw-session-btn-resume {
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff8ee;
+    background-color: rgba(195, 115, 25, 0.88);
+    padding: 4px 12px;
+    border-radius: 6px;
+}
+.dw-session-btn-resume:hover {
+    background-color: rgba(215, 130, 35, 1.0);
+}
+.dw-session-btn-resume:active {
+    background-color: rgba(165, 90, 10, 1.0);
+}
+
+/* Delete icon — clearly visible but secondary */
+.dw-session-btn-icon-danger {
+    color: rgba(255,255,255,0.6);
+    background-color: rgba(255,255,255,0.04);
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+.dw-session-btn-icon-danger:hover {
+    color: #ed333b;
+    background-color: rgba(237,51,59,0.12);
+}
+
+/* Specific Session Actions */
+.dw-session-btn-save {
+    font-size: 11px;
+    font-weight: 600;
+    color: #e8a040;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background-color: rgba(232, 160, 64, 0.1);
+}
+.dw-session-btn-save:hover {
+    background-color: rgba(232, 160, 64, 0.18);
+    color: #f7b455;
+}
+.dw-session-btn-cancel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #aaaaaa;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+.dw-session-btn-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #eeeeee;
+}
+
+.dw-session-stats {
+    font-size: 11px;
+    font-weight: 600;
+    color: #cccccc;
+    margin-top: 3px;
+}
+.dw-session-date {
+    font-size: 9px;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.25);
+    margin-top: 1px;
+}
+
+.devwatch-menu .popup-sub-menu .dw-session-card:last-child,
+.devwatch-menu .popup-sub-menu .dw-session-card-primary:last-child {
+    margin-bottom: 0;
+}
+
+/* Force minimum heights so items never squash and instead trigger the ScrollView */
+.devwatch-menu .popup-menu-item {
+    min-height: 24px;
+}
+.devwatch-menu .popup-separator-menu-item {
+    min-height: 6px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin: 0;
+}
+.devwatch-menu .popup-sub-menu-item {
+    min-height: 26px;
+}
+.dw-build-active-card {
+    min-height: 52px;
+}
+
+.dw-build-hist-row { min-height: 26px; }
+
+/* Section-level internal scroll view */
+.dw-section-scroll {
+    min-height: 180px;
+    max-height: 220px;
+    padding-right: 8px;
+}
+
+/* Remove default menu-item padding around embedded scroll containers. */
+.devwatch-menu .dw-section-scroll-item {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Target approximately 5 visible project entries before section scroll appears. */
+.dw-section-scroll-projects {
+    min-height: 236px;
+    max-height: 236px;
+}
+
+.dw-section-scroll-ports {
+    min-height: 184px;
+    max-height: 184px;
+}
+
+/* Keep row density consistent with non-scrolling section rendering.
+ * PopupSubMenuMenuItem uses the style class "popup-submenu-menu-item". */
+.devwatch-menu .dw-section-scroll .popup-submenu-menu-item,
+.devwatch-menu .dw-section-scroll .dw-project-row-item {
+    min-height: 40px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.devwatch-menu .dw-section-scroll .dw-port-row {
+    min-height: 44px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+/* Keep text and action buttons off the scrollbar gutter. */
+.devwatch-menu .dw-section-scroll .popup-menu-item {
+    padding-right: 8px;
+}
+
+
+.dw-section-scroll-snapshots {
+    min-height: 252px;
+    max-height: 252px;
+    padding-bottom: 4px;
+}
+
+.devwatch-menu .dw-section-scroll-snapshots .popup-menu-item {
+    min-height: 58px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.devwatch-menu .dw-section-scroll-snapshots .dw-session-card,
+.devwatch-menu .dw-section-scroll-snapshots .dw-session-card-primary {
+    min-height: 62px;
+}
